@@ -578,7 +578,7 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
 
 
 <!-- ═══════════════════════════════════════════════════════
-     OUR SERVICES
+     OUR SERVICES (CATEGORY WISE)
 ════════════════════════════════════════════════════════ -->
 <section class="px-3 sm:px-5 lg:px-8 py-5 sm:py-8 lg:py-12 bg-slate-50">
     <div class="max-w-5xl mx-auto">
@@ -600,43 +600,39 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
             };
         @endphp
 
-        <!-- Header row -->
-        <div class="flex items-center justify-between mb-4 sm:mb-6">
-            <h2 class="section-title">Our Services</h2>
-            <a href="{{ route('services.index') }}" class="flex items-center gap-1 text-[11px] sm:text-xs font-bold text-violet-600 hover:text-violet-800 transition-colors group">
-                View All
-                <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+        <!-- Category Wise Services -->
+        <div class="flex flex-col gap-5 sm:gap-8">
+            @foreach($servicesByCategory as $category => $categoryServices)
+                @if($categoryServices->count() > 0)
+                    <div class="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-100 p-4 sm:p-6">
+                        <h3 class="text-center font-bold text-[15px] sm:text-xl text-gray-900 mb-5 sm:mb-8">{{ $category ?: 'Other Products' }}</h3>
+                        
+                        <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-y-5 sm:gap-y-8 gap-x-2 sm:gap-x-4">
+                            @foreach($categoryServices as $service)
+                            <a href="{{ route('services.show', $service->slug) }}" class="relative flex flex-col items-center gap-2 group cursor-pointer outline-none transition-transform hover:-translate-y-1">
+                                @if($service->is_popular)
+                                    <span class="absolute -top-3 left-1 sm:left-2 text-[9px] sm:text-[10px] text-red-600 font-bold">New</span>
+                                @endif
+                                <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center shrink-0 bg-slate-50/80 group-hover:bg-slate-100 transition-colors {{ $service->banner_image ? 'overflow-hidden' : '' }}">
+                                    @if($service->banner_image)
+                                        <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
+                                    @elseif($service->icon)
+                                        <i data-lucide="{{ $service->icon }}" class="w-6 h-6 sm:w-7 sm:h-7 text-violet-600"></i>
+                                    @else
+                                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                        </svg>
+                                    @endif
+                                </div>
+                                <span class="text-[9px] sm:text-[11px] font-bold text-gray-800 text-center leading-tight">{{ $service->name }}</span>
+                            </a>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            @endforeach
         </div>
 
-        <!-- Services grid -->
-        <div class="services-grid">
-            @php
-                $allServices = $services;
-            @endphp
-            @foreach($allServices->take(8) as $service)
-            <a href="{{ route('services.show', $service->slug) }}" class="svc-card">
-                <div class="svc-icon-wrap {{ $service->banner_image ? 'overflow-hidden' : '' }}" style="{{ $service->banner_image ? 'background: transparent;' : '' }}">
-                    @if($service->banner_image)
-                        <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
-                    @elseif($service->icon)
-                        <i data-lucide="{{ $service->icon }}" class="w-6 h-6 sm:w-7 sm:h-7 text-violet-600"></i>
-                    @else
-                        <svg class="w-6 h-6 sm:w-7 sm:h-7 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                    @endif
-                </div>
-                <span class="svc-label">{{ $service->name }}</span>
-            </a>
-            @endforeach
-            <a href="{{ route('services.index') }}" class="svc-card">
-                <div class="svc-icon-wrap">
-                    <i data-lucide="grid-3x3" class="w-6 h-6 sm:w-7 sm:h-7 text-violet-600"></i>
-                </div>
-                <span class="svc-label">And More</span>
-            </a>
-        </div>
     </div>
 </section>
 
