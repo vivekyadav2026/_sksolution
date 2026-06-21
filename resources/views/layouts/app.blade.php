@@ -504,8 +504,10 @@
                 registration.pushManager.getSubscription().then(function(existedSubscription) {
                     if (existedSubscription === null) {
                         console.log('No subscription detected, make a request.');
+                        const vapidPublicKey = "{{ config('webpush.vapid.public_key') }}";
+                        console.log('VAPID Public Key in JS:', vapidPublicKey);
                         registration.pushManager.subscribe({
-                            applicationServerKey: urlBase64ToUint8Array("{{ env('VAPID_PUBLIC_KEY') }}"),
+                            applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
                             userVisibleOnly: true,
                         }).then(function(newSubscription) {
                             console.log('New subscription added.');

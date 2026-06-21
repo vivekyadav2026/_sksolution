@@ -6,11 +6,12 @@ self.addEventListener('push', function (e) {
 
     if (e.data) {
         var msg = e.data.json();
+        console.log("Push event received: ", msg);
         e.waitUntil(self.registration.showNotification(msg.title, {
             body: msg.body,
             icon: msg.icon,
             actions: msg.actions
-        }));
+        }).catch(err => console.error("Error showing notification:", err)));
     }
 });
 
