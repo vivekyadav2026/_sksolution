@@ -20,7 +20,8 @@ class AdminBannerController extends Controller
         $request->validate([
             'title' => 'nullable|string|max:255',
             'image' => 'required|image|max:5120',
-            'link' => 'nullable|string'
+            'link' => 'nullable|string',
+            'type' => 'required|in:home,partner'
         ]);
 
         $path = $request->file('image')->store('banners', 'public');
@@ -29,6 +30,7 @@ class AdminBannerController extends Controller
             'title' => $request->title,
             'image_path' => $path,
             'link' => $request->link,
+            'type' => $request->type,
             'is_active' => true
         ]);
 
@@ -40,7 +42,8 @@ class AdminBannerController extends Controller
         $request->validate([
             'title' => 'nullable|string|max:255',
             'image' => 'nullable|image|max:5120',
-            'link' => 'nullable|string'
+            'link' => 'nullable|string',
+            'type' => 'required|in:home,partner'
         ]);
 
         if ($request->hasFile('image')) {
@@ -52,6 +55,7 @@ class AdminBannerController extends Controller
 
         $banner->title = $request->title;
         $banner->link = $request->link;
+        $banner->type = $request->type;
         $banner->save();
 
         return back()->with('success', 'Banner updated successfully.');

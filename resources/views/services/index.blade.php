@@ -23,7 +23,7 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
 /* ── Service card ───────────────────────────────────────── */
 .svc-card {
     background: #fff;
-    border: none !important;
+    border: 1px solid #f1f5f9 !important;
     border-radius: 14px;
     display: flex;
     flex-direction: column;
@@ -32,7 +32,7 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
     gap: 8px;
     padding: 14px 8px;
     text-align: center;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
     transition: all 0.22s ease;
     cursor: pointer;
     text-decoration: none;
@@ -44,7 +44,8 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
     .svc-card { border-radius: 18px; gap: 10px; padding: 18px 10px; min-height: 120px; }
 }
 .svc-card:hover, .svc-card:focus, .svc-card:active {
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 8px 25px rgba(109, 40, 217, 0.15) !important;
+    border-color: #ede9fe !important;
     transform: translateY(-3px);
     outline: none !important;
     background: #fff !important;

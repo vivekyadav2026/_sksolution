@@ -65,6 +65,8 @@ class DashboardController extends Controller
         $chartLeads = json_encode($monthlyLeads);
         $chartConversions = json_encode($monthlyConversions);
 
+        $banners = \App\Models\Banner::where('is_active', true)->where('type', 'partner')->latest()->get();
+
         return view('dashboard', compact(
             'wallet',
             'totalEarnings',
@@ -74,7 +76,8 @@ class DashboardController extends Controller
             'chartMonths',
             'chartEarnings',
             'chartLeads',
-            'chartConversions'
+            'chartConversions',
+            'banners'
         ));
     }
 

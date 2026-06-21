@@ -88,6 +88,14 @@
                     <p class="text-xs text-slate-400 mt-1">If set, users clicking on the notification will be redirected to this URL.</p>
                 </div>
 
+                <!-- Image URL -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Notification Image URL (Optional)</label>
+                    <input type="url" name="image" placeholder="e.g. https://example.com/image.jpg" value="{{ old('image') }}"
+                        class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent block p-3 outline-none transition-all">
+                    <p class="text-xs text-slate-400 mt-1">If set, this image will be shown inside the push notification banner.</p>
+                </div>
+
                 <!-- Hidden defaults for icon and color -->
                 <input type="hidden" name="icon" value="bell">
                 <input type="hidden" name="color" value="slate">

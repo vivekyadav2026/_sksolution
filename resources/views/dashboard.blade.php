@@ -26,6 +26,65 @@
         </div>
     </div>
 
+    <!-- Banners Section -->
+    @if(isset($banners) && $banners->count() > 0)
+    <div class="mb-8">
+        <!-- Interactive Carousel using Alpine.js -->
+        <div x-data="{ 
+            activeSlide: 0,
+            slidesCount: {{ $banners->count() ?: 1 }},
+            autoPlay() {
+                if (this.slidesCount > 1) {
+                    setInterval(() => {
+                        this.activeSlide = (this.activeSlide + 1) % this.slidesCount;
+                    }, 4000);
+                }
+            }
+        }" x-init="autoPlay()" class="relative group">
+            
+            @if($banners->count() > 1)
+            <!-- Navigation Buttons (Chevron Next & Prev) -->
+            <button @click="activeSlide = (activeSlide - 1 + slidesCount) % slidesCount" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-white/70 backdrop-blur-md border border-white/80 flex items-center justify-center text-slate-800 hover:bg-white hover:shadow-lg transition-all focus:outline-none opacity-0 group-hover:opacity-100">
+                <svg class="w-4 h-4 sm:w-6 sm:h-6 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <button @click="activeSlide = (activeSlide + 1) % slidesCount" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-white/70 backdrop-blur-md border border-white/80 flex items-center justify-center text-slate-800 hover:bg-white hover:shadow-lg transition-all focus:outline-none opacity-0 group-hover:opacity-100">
+                <svg class="w-4 h-4 sm:w-6 sm:h-6 text-slate-800" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
+            @endif
+
+            <!-- Slide Wrapper -->
+            <div class="relative overflow-hidden rounded-[16px] sm:rounded-[22px] shadow-sm border border-slate-100 aspect-[16/9] bg-slate-50">
+                <!-- Sliding Track -->
+                <div class="flex w-full h-full transition-transform duration-700 ease-in-out" :style="'transform: translateX(-' + (activeSlide * 100) + '%)'">
+                    @foreach($banners as $banner)
+                    <!-- Slide -->
+                    <div class="w-full h-full shrink-0">
+                        @if($banner->link)
+                            <a href="{{ $banner->link }}" target="_blank">
+                                <img src="{{ asset('storage/' . $banner->image_path) }}" class="w-full h-full object-cover" alt="{{ $banner->title ?? 'Banner' }}">
+                            </a>
+                        @else
+                            <img src="{{ asset('storage/' . $banner->image_path) }}" class="w-full h-full object-cover" alt="{{ $banner->title ?? 'Banner' }}">
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Slide Dots Indicator -->
+            <div x-show="slidesCount > 1" class="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 flex justify-center gap-1.5 sm:gap-2 z-20">
+                <template x-for="i in slidesCount">
+                    <button @click="activeSlide = i - 1" class="h-1.5 sm:h-2 rounded-full transition-all duration-300 focus:outline-none backdrop-blur-sm shadow-sm" :class="activeSlide === i - 1 ? 'bg-violet-600 w-4 sm:w-6' : 'bg-slate-300/80 hover:bg-slate-450 w-1.5 sm:w-2'"></button>
+                </template>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Stats Cards Grid -->
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
         <!-- Card 1 -->

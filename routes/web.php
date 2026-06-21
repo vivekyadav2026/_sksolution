@@ -18,7 +18,7 @@ use App\Http\Controllers\ReferralController;
 use App\Models\Service;
 
 Route::get('/', function () {
-    $banners = \App\Models\Banner::where('is_active', true)->latest()->get();
+    $banners = \App\Models\Banner::where('is_active', true)->where('type', 'home')->latest()->get();
     
     $orderedSlugs = [
         'e-commerce-website-design-development',

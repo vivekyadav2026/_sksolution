@@ -22,6 +22,7 @@ class AdminNotificationController extends Controller
             'message' => 'required|string|max:1000',
             'target' => 'required|string', // 'all', 'customers', 'partners', or user_id
             'url' => 'nullable|url|max:255',
+            'image' => 'nullable|url|max:255',
             'icon' => 'nullable|string|max:50',
             'color' => 'nullable|string|max:50',
         ]);
@@ -29,11 +30,12 @@ class AdminNotificationController extends Controller
         $title = $request->title;
         $message = $request->message;
         $url = $request->url;
+        $image = $request->image;
         $icon = $request->icon ?: 'bell';
         $color = $request->color ?: 'violet';
 
         $notification = new CustomNotification($title, $message, $url, $icon, $color);
-        $webPushNotification = new \App\Notifications\WebPushNotification($title, $message, $url);
+        $webPushNotification = new \App\Notifications\WebPushNotification($title, $message, $url, $image);
 
         if ($request->target === 'all') {
             $users = User::whereIn('role', ['customer', 'partner'])->get();

@@ -42,32 +42,23 @@ class PostPaymentController extends Controller
             return back()->with('error', 'Details already submitted.');
         }
 
-        // Exclude CSRF, files, and standard laravel inputs from JSON data
-        $data = $request->except(['_token', 'images', 'documents', 'service_name']);
+        // Exclude CSRF, service_name, and all file inputs from JSON data
+        $fileKeys = array_keys($request->allFiles());
+        $data = $request->except(array_merge(['_token', 'service_name'], $fileKeys));
         
         $uploadedFiles = [];
 
-        // Handle multiple image/file uploads
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                $path = $file->store('post_payments/images', 'public');
+        // Dynamically handle any file uploads
+        foreach ($request->allFiles() as $key => $files) {
+            $fileArray = is_array($files) ? $files : [$files];
+            foreach ($fileArray as $file) {
+                $path = $file->store('post_payments/uploads', 'public');
                 $uploadedFiles[] = [
-                    'type' => 'image',
+                    'field' => $key,
                     'path' => $path,
                     'url'  => Storage::url($path),
-                    'name' => $file->getClientOriginalName()
-                ];
-            }
-        }
-
-        if ($request->hasFile('documents')) {
-            foreach ($request->file('documents') as $file) {
-                $path = $file->store('post_payments/documents', 'public');
-                $uploadedFiles[] = [
-                    'type' => 'document',
-                    'path' => $path,
-                    'url'  => Storage::url($path),
-                    'name' => $file->getClientOriginalName()
+                    'name' => $file->getClientOriginalName(),
+                    'mime' => $file->getMimeType()
                 ];
             }
         }

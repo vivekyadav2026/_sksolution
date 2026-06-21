@@ -49,6 +49,13 @@
                                 class="w-full border border-slate-200 bg-slate-50 text-slate-900 text-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none">
                         </div>
                         <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Banner Type <span class="text-red-500">*</span></label>
+                            <select name="type" required class="w-full border border-slate-200 bg-slate-50 text-slate-900 text-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none">
+                                <option value="home">Home Page Banner</option>
+                                <option value="partner">Partner Panel Banner</option>
+                            </select>
+                        </div>
+                        <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-1.5">Target Link (Optional)</label>
                             <input type="text" name="link" placeholder="https://example.com or /services" 
                                 class="w-full border border-slate-200 bg-slate-50 text-slate-900 text-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none">
@@ -103,6 +110,7 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="text-sm font-bold text-slate-900">{{ $banner->title ?: 'Untitled Banner' }}</div>
+                                        <div class="text-xs text-slate-500 mt-0.5 mb-1 uppercase font-semibold">{{ $banner->type === 'home' ? 'Home Page' : 'Partner Panel' }}</div>
                                         @if($banner->link)
                                             <a href="{{ $banner->link }}" target="_blank" class="text-xs text-indigo-600 hover:underline mt-1 inline-flex items-center gap-1">
                                                 <i data-lucide="link" class="w-3 h-3"></i> View Link
@@ -152,6 +160,13 @@
                                                             <div>
                                                                 <label class="block text-sm font-semibold text-slate-700 mb-1.5">Banner Title</label>
                                                                 <input type="text" name="title" value="{{ $banner->title }}" class="w-full border border-slate-200 bg-slate-50 text-slate-900 text-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 outline-none">
+                                                            </div>
+                                                            <div>
+                                                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Banner Type</label>
+                                                                <select name="type" required class="w-full border border-slate-200 bg-slate-50 text-slate-900 text-sm rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-500 outline-none">
+                                                                    <option value="home" {{ $banner->type === 'home' ? 'selected' : '' }}>Home Page Banner</option>
+                                                                    <option value="partner" {{ $banner->type === 'partner' ? 'selected' : '' }}>Partner Panel Banner</option>
+                                                                </select>
                                                             </div>
                                                             <div>
                                                                 <label class="block text-sm font-semibold text-slate-700 mb-1.5">Target Link</label>

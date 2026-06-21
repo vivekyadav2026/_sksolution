@@ -161,7 +161,7 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
 /* ── Service card ───────────────────────────────────────── */
 .svc-card {
     background: #fff;
-    border: none !important;
+    border: 1px solid #f1f5f9 !important;
     border-radius: 14px;
     display: flex;
     flex-direction: column;
@@ -170,7 +170,7 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
     gap: 8px;
     padding: 14px 8px;
     text-align: center;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
     transition: all 0.22s ease;
     cursor: pointer;
     text-decoration: none;
@@ -182,7 +182,8 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
     .svc-card { border-radius: 18px; gap: 10px; padding: 18px 10px; min-height: 120px; }
 }
 .svc-card:hover, .svc-card:focus, .svc-card:active {
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 8px 25px rgba(109, 40, 217, 0.15) !important;
+    border-color: #ede9fe !important;
     transform: translateY(-3px);
     outline: none !important;
     background: #fff !important;
@@ -365,6 +366,18 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
 /* ── FB/IG/YT brand icons (SVG inline) ───────────────────── */
 .brand-icon { width: 36px; height: 36px; }
 @media (min-width: 640px) { .brand-icon { width: 42px; height: 42px; } }
+
+/* ── Service circle icon shadow ─────────────────────────── */
+.service-circle-icon {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    background-color: #ffffff !important;
+    transition: all 0.25s ease-in-out !important;
+}
+.group:hover .service-circle-icon {
+    box-shadow: 0 8px 24px rgba(109, 40, 217, 0.22) !important;
+    transform: scale(1.05) !important;
+}
 </style>
 
 <div class="page-content">
@@ -607,13 +620,10 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
                     <div class="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-100 p-4 sm:p-6">
                         <h3 class="text-center font-bold text-[15px] sm:text-xl text-gray-900 mb-5 sm:mb-8">{{ $category ?: 'Other Products' }}</h3>
                         
-                        <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-y-5 sm:gap-y-8 gap-x-2 sm:gap-x-4">
+                        <div class="services-grid">
                             @foreach($categoryServices as $service)
-                            <a href="{{ route('services.show', $service->slug) }}" class="relative flex flex-col items-center gap-2 group cursor-pointer outline-none transition-transform hover:-translate-y-1">
-                                @if($service->is_popular)
-                                    <span class="absolute -top-3 left-1 sm:left-2 text-[9px] sm:text-[10px] text-red-600 font-bold">New</span>
-                                @endif
-                                <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center shrink-0 bg-slate-50/80 group-hover:bg-slate-100 transition-colors {{ $service->banner_image ? 'overflow-hidden' : '' }}">
+                            <a href="{{ route('services.show', $service->slug) }}" class="svc-card">
+                                <div class="svc-icon-wrap {{ $service->banner_image ? 'overflow-hidden' : '' }}" style="{{ $service->banner_image ? 'background: transparent;' : '' }}">
                                     @if($service->banner_image)
                                         <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
                                     @elseif($service->icon)
@@ -624,7 +634,7 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
                                         </svg>
                                     @endif
                                 </div>
-                                <span class="text-[9px] sm:text-[11px] font-bold text-gray-800 text-center leading-tight">{{ $service->name }}</span>
+                                <span class="svc-label">{{ $service->name }}</span>
                             </a>
                             @endforeach
                         </div>

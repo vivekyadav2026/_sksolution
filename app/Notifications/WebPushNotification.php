@@ -14,15 +14,17 @@ class WebPushNotification extends Notification
     public $title;
     public $body;
     public $actionUrl;
+    public $image;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($title, $body, $actionUrl = null)
+    public function __construct($title, $body, $actionUrl = null, $image = null)
     {
         $this->title = $title;
         $this->body = $body;
         $this->actionUrl = $actionUrl ?? url('/');
+        $this->image = $image;
     }
 
     /**
@@ -37,11 +39,17 @@ class WebPushNotification extends Notification
 
     public function toWebPush($notifiable, $notification)
     {
-        return (new WebPushMessage)
+        $message = (new WebPushMessage)
             ->title($this->title)
             ->icon('/logo.png')
             ->body($this->body)
             ->action('View', 'view', $this->actionUrl)
             ->options(['TTL' => 1000]);
+
+        if ($this->image) {
+            $message->image($this->image);
+        }
+
+        return $message;
     }
 }
