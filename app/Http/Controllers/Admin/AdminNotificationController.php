@@ -33,6 +33,7 @@ class AdminNotificationController extends Controller
         $color = $request->color ?: 'violet';
 
         $notification = new CustomNotification($title, $message, $url, $icon, $color);
+        $webPushNotification = new \App\Notifications\WebPushNotification($title, $message, $url);
 
         if ($request->target === 'all') {
             $users = User::whereIn('role', ['customer', 'partner'])->get();
@@ -46,6 +47,12 @@ class AdminNotificationController extends Controller
 
         foreach ($users as $user) {
             $user->notify($notification);
+            try {
+                $user->notify($webPushNotification);
+            } catch (\Exception $e) {
+                // Log or ignore if pushing fails for a specific user
+                \Log::error('Web push failed for user ' . $user->id . ': ' . $e->getMessage());
+            }
         }
 
         return redirect()->back()->with('success', 'Notification sent successfully to ' . $users->count() . ' user(s).');

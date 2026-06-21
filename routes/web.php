@@ -431,6 +431,9 @@ Route::middleware(['auth:customer,partner,admin'])->prefix('notifications')->nam
         auth()->user()->unreadNotifications->markAsRead();
         return back()->with('success', 'All notifications marked as read.');
     })->name('read.all');
+
+    Route::post('/push-subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'subscribe'])->name('push.subscribe');
+    Route::post('/push-unsubscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
 });
 
 // Temporary Route to Fix Storage Links on Live Server without SSH Access

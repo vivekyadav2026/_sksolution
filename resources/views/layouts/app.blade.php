@@ -438,5 +438,106 @@
 
     <!-- Page-specific scripts -->
     @stack('scripts')
+
+    @if(auth()->check())
+    <script>
+        function urlBase64ToUint8Array(base64String) {
+            var padding = '='.repeat((4 - base64String.length % 4) % 4);
+            var base64 = (base64String + padding)
+                .replace(/\-/g, '+')
+                .replace(/_/g, '/');
+
+            var rawData = window.atob(base64);
+            var outputArray = new Uint8Array(rawData.length);
+
+            for (var i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+
+        function storePushSubscription(pushSubscription) {
+            const token = document.querySelector('meta[name="csrf-token"]') 
+                          ? document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                          : '{{ csrf_token() }}';
+
+            fetch('{{ route("notifications.push.subscribe") }}', {
+                method: 'POST',
+                body: JSON.stringify(pushSubscription),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': token
+                }
+            })
+            .then((res) => {
+                return res.json();
+            })
+            .then((res) => {
+                console.log('Push subscription successful', res);
+            })
+            .catch((err) => {
+                console.log('Push subscription failed', err);
+            });
+        }
+
+        function initPush() {
+            if (!('serviceWorker' in navigator)) {
+                console.log('Service workers aren\'t supported in this browser.');
+                return;
+            }
+
+            navigator.serviceWorker.register('/sw.js')
+            .then(() => {
+                console.log('Service Worker Registered');
+                initPushSubscription();
+            });
+        }
+
+        function initPushSubscription() {
+            navigator.serviceWorker.ready.then(function(registration) {
+                if (!registration.pushManager) {
+                    console.log('Push manager unavailable.');
+                    return;
+                }
+
+                registration.pushManager.getSubscription().then(function(existedSubscription) {
+                    if (existedSubscription === null) {
+                        console.log('No subscription detected, make a request.');
+                        registration.pushManager.subscribe({
+                            applicationServerKey: urlBase64ToUint8Array("{{ env('VAPID_PUBLIC_KEY') }}"),
+                            userVisibleOnly: true,
+                        }).then(function(newSubscription) {
+                            console.log('New subscription added.');
+                            storePushSubscription(newSubscription);
+                        }).catch(function(e) {
+                            if (Notification.permission !== 'granted') {
+                                console.log('Permission was not granted.');
+                            } else {
+                                console.error('An error ocurred during the subscription process.', e);
+                            }
+                        });
+                    } else {
+                        console.log('Existed subscription detected.');
+                        storePushSubscription(existedSubscription);
+                    }
+                });
+            });
+        }
+
+        // Delay prompt slightly so it isn't too aggressive on load
+        setTimeout(() => {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission().then(function(permission) {
+                    if (permission === 'granted') {
+                        initPush();
+                    }
+                });
+            } else if ('Notification' in window && Notification.permission === 'granted') {
+                initPush();
+            }
+        }, 3000);
+    </script>
+    @endif
 </body>
 </html>
