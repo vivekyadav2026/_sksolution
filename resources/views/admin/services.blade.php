@@ -86,7 +86,7 @@
                         <div class="flex items-start gap-3">
                             <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center shrink-0 overflow-hidden border border-slate-200 shadow-sm">
                                 @if($service->banner_image)
-                                    <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
+                                    <img src="{{ asset($service->banner_image) }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
                                 @else
                                     <i data-lucide="{{ $service->icon ?? 'box' }}" class="w-5 h-5 text-indigo-600"></i>
                                 @endif
@@ -562,7 +562,7 @@ function openModal(service = null) {
         window.dispatchEvent(new CustomEvent('load-service-pricing', { detail: service }));
 
         if (service.banner_image) {
-            analyzeImage('/storage/' + service.banner_image, false);
+            analyzeImage('/' + service.banner_image, false);
         }
     } else {
         title.textContent = 'Add New Service';

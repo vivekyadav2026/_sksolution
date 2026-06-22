@@ -625,7 +625,7 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
                             <a href="{{ route('services.show', $service->slug) }}" class="svc-card">
                                 <div class="svc-icon-wrap {{ $service->banner_image ? 'overflow-hidden' : '' }}" style="{{ $service->banner_image ? 'background: transparent;' : '' }}">
                                     @if($service->banner_image)
-                                        <img src="{{ asset('storage/' . $service->banner_image) }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
+                                        <img src="{{ asset($service->banner_image) }}" alt="{{ $service->name }}" class="w-full h-full object-cover">
                                     @elseif($service->icon)
                                         <i data-lucide="{{ $service->icon }}" class="w-6 h-6 sm:w-7 sm:h-7 text-violet-600"></i>
                                     @else

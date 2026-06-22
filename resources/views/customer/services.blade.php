@@ -191,7 +191,7 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
     <a href="{{ route('services.show', $svc->slug) }}" class="svc-card" data-category="{{ htmlspecialchars($svc->category) }}">
         <div class="svc-icon-wrap {{ $svc->banner_image ? 'overflow-hidden' : '' }}" style="{{ $svc->banner_image ? 'background: transparent;' : '' }}">
             @if($svc->banner_image)
-                <img src="{{ asset('storage/' . $svc->banner_image) }}" alt="{{ $svc->name }}" class="w-full h-full object-cover">
+                <img src="{{ asset($svc->banner_image) }}" alt="{{ $svc->name }}" class="w-full h-full object-cover">
             @elseif($svc->icon)
                 <i data-lucide="{{ $svc->icon }}" class="w-6 h-6 sm:w-7 sm:h-7 text-violet-600"></i>
             @else

@@ -137,8 +137,8 @@ class AdminServiceController extends Controller
 
         $bannerPath = $service->banner_image;
         if ($request->hasFile('banner_image')) {
-            if ($bannerPath && \Illuminate\Support\Facades\Storage::disk('public')->exists($bannerPath)) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($bannerPath);
+            if ($bannerPath && file_exists(public_path($bannerPath))) {
+                unlink(public_path($bannerPath));
             }
             $bannerPath = $this->compressAndSaveImage($request->file('banner_image'), 'services');
         }
@@ -254,8 +254,8 @@ class AdminServiceController extends Controller
 
     public function destroy(Service $service)
     {
-        if ($service->banner_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($service->banner_image)) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($service->banner_image);
+        if ($service->banner_image && file_exists(public_path($service->banner_image))) {
+            unlink(public_path($service->banner_image));
         }
         $service->delete();
         return redirect()->back()->with('success', 'Service deleted successfully.');
@@ -327,7 +327,11 @@ class AdminServiceController extends Controller
         // Save compressed file to storage
         $fileName = uniqid() . '.jpg';
         
-        \Illuminate\Support\Facades\Storage::disk('public')->put($destinationPath . '/' . $fileName, file_get_contents($tempPath));
+        $targetDir = public_path($destinationPath);
+        if (!file_exists($targetDir)) {
+            mkdir($targetDir, 0755, true);
+        }
+        file_put_contents($targetDir . '/' . $fileName, file_get_contents($tempPath));
         unlink($tempPath);
 
         return $destinationPath . '/' . $fileName;
