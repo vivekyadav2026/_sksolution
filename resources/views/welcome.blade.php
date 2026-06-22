@@ -614,11 +614,11 @@ html, body, p, div, span, h1, h2, h3, h4, h5, h6, a, button, input, select, text
         @endphp
 
         <!-- Category Wise Services -->
-        <div class="flex flex-col gap-5 sm:gap-8">
+        <div class="flex flex-col gap-4 sm:gap-6">
             @foreach($servicesByCategory as $category => $categoryServices)
                 @if($categoryServices->count() > 0)
-                    <div class="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-100 p-4 sm:p-6">
-                        <h3 class="text-center font-bold text-[15px] sm:text-xl text-gray-900 mb-5 sm:mb-8">{{ $category ?: 'Other Products' }}</h3>
+                    <div class="py-1">
+                        <h3 class="text-center font-bold text-[15px] sm:text-xl text-gray-900 mb-3 sm:mb-4">{{ $category ?: 'Other Products' }}</h3>
                         
                         <div class="services-grid">
                             @foreach($categoryServices as $service)
